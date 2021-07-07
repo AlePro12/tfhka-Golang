@@ -28,21 +28,21 @@ type Tfhka struct {
 }
 
 //127.0.0.1:PORT Important
-func tfhka_init(address string, service_port string) {
+func Tfhka_init(address string, service_port string) {
 	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", nil}
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", a.address+":"+a.service_port)
-	checkError(err)
+	CheckError(err)
 	conn, err := net.DialTCP("tcp4", nil, tcpAddr)
-	checkError(err)
+	CheckError(err)
 	a.conn = conn
 }
 func (a Tfhka) SendCmd(cmd string) bool {
 	var in = "SendCmd():" + cmd + "\000"
 	_, err := a.conn.Write([]byte(in))
-	checkError(err)
+	CheckError(err)
 	result, err := ioutil.ReadAll(a.conn)
-	checkError(err)
-	a.resp = substr(string(result), 10, 1)
+	CheckError(err)
+	a.resp = Substr(string(result), 10, 1)
 	if a.resp == "T" {
 		return true
 	} else {
@@ -65,13 +65,13 @@ function SendCmd($cmd = "")
 	}
 }
 */
-func checkError(err error) {
+func CheckError(err error) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
 		os.Exit(1)
 	}
 }
-func substr(input string, start int, length int) string {
+func Substr(input string, start int, length int) string {
 	asRunes := []rune(input)
 
 	if start >= len(asRunes) {
