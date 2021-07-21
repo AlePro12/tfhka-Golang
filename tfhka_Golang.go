@@ -49,6 +49,19 @@ func (a Tfhka) SendCmd(cmd string) bool {
 		return false
 	}
 }
+func (a Tfhka) CheckFprinter(cmd string) bool {
+	var in = "CheckFprinter():1\000"
+	_, err := a.conn.Write([]byte(in))
+	CheckError(err)
+	result, err := ioutil.ReadAll(a.conn)
+	CheckError(err)
+	a.resp = Substr(string(result), 10, 1)
+	if a.resp == "T" {
+		return true
+	} else {
+		return false
+	}
+}
 
 /*
 function SendCmd($cmd = "")
@@ -63,7 +76,7 @@ function SendCmd($cmd = "")
 	}else{
 		return false;
 	}
-}
+}CheckFprinter():1
 */
 func CheckError(err error) {
 	if err != nil {
