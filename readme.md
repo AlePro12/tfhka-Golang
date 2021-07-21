@@ -10,8 +10,8 @@ esta instalada la impresora con DPOS_SOCKET_P.exe corriendo.
 
 #USO
 **Ejemplo basico de conexion con el socket**
-
-    ip="192.168.0.2" // Direccion de la PC que tiene la impresora fiscal y que este corriendo DPOS_SOCKET.exe
+```go
+    ip := "192.168.0.2" // Direccion de la PC que tiene la impresora fiscal y que este corriendo DPOS_SOCKET.exe
     Thka, Is_connected := tfhka_Golang.Tfhka_init(ip, "8090")
 	if Is_connected == true {
 	Result := Thka.CheckFprinter()
@@ -23,11 +23,12 @@ esta instalada la impresora con DPOS_SOCKET_P.exe corriendo.
     }else{
     fmt.Println("No se pudo conectar con la Impresora")
     }
+```
 Es necesario que el host este ejecutando DPOS_SOCKET.exe ya que este es el que hace la conexion entre estas.
 
 **Ejemplo de envio de comandos (Imprimir Factura Fiscal)**
-
-    ip="192.168.0.2" // Direccion de la PC que tiene la impresora fiscal y que este corriendo DPOS_SOCKET.exe
+```go
+    ip:="192.168.0.2" // Direccion de la PC que tiene la impresora fiscal y que este corriendo DPOS_SOCKET.exe
     Thka, Is_connected := tfhka_Golang.Tfhka_init(ip, "8090")
 	if Is_connected == true {
 	Result := Thka.CheckFprinter()
@@ -45,3 +46,4 @@ Es necesario que el host este ejecutando DPOS_SOCKET.exe ya que este es el que h
     }else{
     fmt.Println("No se pudo conectar con la Impresora")
     }
+```
