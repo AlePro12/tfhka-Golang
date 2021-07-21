@@ -28,13 +28,14 @@ type Tfhka struct {
 }
 
 //127.0.0.1:PORT Important
-func Tfhka_init(address string, service_port string) {
+func Tfhka_init(address string, service_port string) Tfhka {
 	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", nil}
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", a.address+":"+a.service_port)
 	CheckError(err)
 	conn, err := net.DialTCP("tcp4", nil, tcpAddr)
 	CheckError(err)
 	a.conn = conn
+	return a
 }
 func (a Tfhka) SendCmd(cmd string) bool {
 	var in = "SendCmd():" + cmd + "\000"
@@ -49,7 +50,7 @@ func (a Tfhka) SendCmd(cmd string) bool {
 		return false
 	}
 }
-func (a Tfhka) CheckFprinter(cmd string) bool {
+func (a Tfhka) CheckFprinter() bool {
 	var in = "CheckFprinter():1\000"
 	_, err := a.conn.Write([]byte(in))
 	CheckError(err)
