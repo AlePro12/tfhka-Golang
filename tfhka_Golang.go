@@ -24,12 +24,13 @@ type Tfhka struct {
 	arrayS6          string
 	arrayRX          string
 	arrayRZ          string
+	LastRes          string
 	conn             *net.TCPConn
 }
 
 //127.0.0.1:PORT Important
 func Tfhka_init(address string, service_port string) (Tfhka, bool) {
-	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", nil}
+	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", "", nil}
 	fmt.Println("Dial Complete")
 	seconds := 5
 	d := net.Dialer{Timeout: time.Duration(seconds) * time.Second}
@@ -54,6 +55,7 @@ func (a Tfhka) SendCmd(cmd string) bool {
 	CheckError(err)
 	//fmt.Println("Readed: " + string(tmp))
 	a.resp = Substr(string(tmp), 10, 1)
+	a.LastRes = a.LastRes
 	if a.resp == "T" {
 		return true
 	} else {
@@ -111,4 +113,14 @@ func Substr(input string, start int, length int) string {
 	}
 
 	return string(asRunes[start : start+length])
+}
+func (a Tfhka) CheckCmdError(CmdValid bool, Exit bool) {
+	if CmdValid != true {
+		fmt.Fprintf(os.Stderr, "Fatal error: %s", a.LastRes)
+		if Exit {
+			os.Exit(1)
+		} else {
+
+		}
+	}
 }

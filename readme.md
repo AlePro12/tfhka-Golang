@@ -35,11 +35,17 @@ Es necesario que el host este ejecutando DPOS_SOCKET.exe ya que este es el que h
     if Result == true {
     var CmdValid bool
     CmdValid = Thka.SendCmd("i01NOMBRE:ALEJANDRO SANCHEZ")
+    Thka.CheckCmdError(CmdValid,true)
     CmdValid = Thka.SendCmd("i02CEDULA:V-9999999")
+    Thka.CheckCmdError(CmdValid,true)
     CmdValid = Thka.SendCmd("i03DIRECCION:CABIMAS")
+    Thka.CheckCmdError(CmdValid,true)
     CmdValid = Thka.SendCmd("!011431034500001000PEPITO XXL 180GR")
+    Thka.CheckCmdError(CmdValid,true)
     CmdValid = Thka.SendCmd("!012138793100001000SERVILLETA SARY X 150UNI")
+    Thka.CheckCmdError(CmdValid,true)
     CmdValid = Thka.SendCmd("101")
+    Thka.CheckCmdError(CmdValid,true)
     }else{
     fmt.Println("La impresora no esta disp.")
     }
