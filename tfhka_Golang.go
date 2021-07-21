@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"time"
 )
 
 type Tfhka struct {
@@ -27,27 +28,38 @@ type Tfhka struct {
 }
 
 //127.0.0.1:PORT Important
-func Tfhka_init(address string, service_port string) Tfhka {
+func Tfhka_init(address string, service_port string) (Tfhka, bool) {
 	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", nil}
-	tcpAddr, err := net.ResolveTCPAddr("tcp4", a.address+":"+a.service_port)
-	CheckError(err)
-	fmt.Println("Loading...")
-	conn, err := net.DialTCP("tcp4", nil, tcpAddr)
-	CheckError(err)
+	//tcpAddr, err := net.ResolveTCPAddr("tcp4", a.address+":"+a.service_port)
+	//CheckError(err)
+	//fmt.Println("Loading...")
+	//conn, err := net.DialTCP("tcp4", nil, tcpAddr)
+	//CheckError(err)
 	fmt.Println("Dial Complete")
-	a.conn = conn
-	return a
+	seconds := 5
+	d := net.Dialer{Timeout: time.Duration(seconds) * time.Second}
+	conn, err := d.Dial("tcp", a.address+":"+a.service_port)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
+		a.conn = conn.(*net.TCPConn)
+		return a, false
+		//os.Exit(1)
+	} else {
+		a.conn = conn.(*net.TCPConn)
+		return a, true
+	}
+
 }
 func (a Tfhka) SendCmd(cmd string) bool {
-	fmt.Println("Send Command: (" + cmd + ") ...")
+	//fmt.Println("Send Command: (" + cmd + ") ...")
 	var in = "SendCmd():" + cmd + "\000"
 	_, err := a.conn.Write([]byte(in))
 	CheckError(err)
 	tmp := make([]byte, 256)
-	fmt.Println("Write Complete. Reading...")
+	//fmt.Println("Write Complete. Reading...")
 	_, err = a.conn.Read(tmp)
 	CheckError(err)
-	fmt.Println("Readed: " + string(tmp))
+	//fmt.Println("Readed: " + string(tmp))
 	a.resp = Substr(string(tmp), 10, 1)
 	if a.resp == "T" {
 		return true
@@ -56,15 +68,15 @@ func (a Tfhka) SendCmd(cmd string) bool {
 	}
 }
 func (a Tfhka) CheckFprinter(cmd string) bool {
-	fmt.Println("Send Check ...")
+	//fmt.Println("Send Check ...")
 	var in = "CheckFprinter():1\000"
 	_, err := a.conn.Write([]byte(in))
 	CheckError(err)
 	tmp := make([]byte, 256)
-	fmt.Println("Write Complete. Reading...")
+	//fmt.Println("Write Complete. Reading...")
 	_, err = a.conn.Read(tmp)
 	CheckError(err)
-	fmt.Println("Readed: " + string(tmp))
+	//fmt.Println("Readed: " + string(tmp))
 	a.resp = Substr(string(tmp), 10, 1)
 	if a.resp == "T" {
 		return true
