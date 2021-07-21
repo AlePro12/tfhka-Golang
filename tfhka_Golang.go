@@ -30,20 +30,13 @@ type Tfhka struct {
 //127.0.0.1:PORT Important
 func Tfhka_init(address string, service_port string) (Tfhka, bool) {
 	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", nil}
-	//tcpAddr, err := net.ResolveTCPAddr("tcp4", a.address+":"+a.service_port)
-	//CheckError(err)
-	//fmt.Println("Loading...")
-	//conn, err := net.DialTCP("tcp4", nil, tcpAddr)
-	//CheckError(err)
 	fmt.Println("Dial Complete")
 	seconds := 5
 	d := net.Dialer{Timeout: time.Duration(seconds) * time.Second}
 	conn, err := d.Dial("tcp", a.address+":"+a.service_port)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
-		a.conn = conn.(*net.TCPConn)
 		return a, false
-		//os.Exit(1)
 	} else {
 		a.conn = conn.(*net.TCPConn)
 		return a, true
@@ -67,7 +60,7 @@ func (a Tfhka) SendCmd(cmd string) bool {
 		return false
 	}
 }
-func (a Tfhka) CheckFprinter(cmd string) bool {
+func (a Tfhka) CheckFprinter() bool {
 	//fmt.Println("Send Check ...")
 	var in = "CheckFprinter():1\000"
 	_, err := a.conn.Write([]byte(in))
