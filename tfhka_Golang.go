@@ -2,7 +2,6 @@ package tfhka_Golang
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net"
 	"os"
 )
@@ -32,31 +31,41 @@ func Tfhka_init(address string, service_port string) Tfhka {
 	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", nil}
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", a.address+":"+a.service_port)
 	CheckError(err)
+	fmt.Println("Loading...")
 	conn, err := net.DialTCP("tcp4", nil, tcpAddr)
 	CheckError(err)
+	fmt.Println("Dial Complete")
 	a.conn = conn
 	return a
 }
 func (a Tfhka) SendCmd(cmd string) bool {
+	fmt.Println("Send Command: (" + cmd + ") ...")
 	var in = "SendCmd():" + cmd + "\000"
 	_, err := a.conn.Write([]byte(in))
 	CheckError(err)
-	result, err := ioutil.ReadAll(a.conn)
+	tmp := make([]byte, 256)
+	fmt.Println("Write Complete. Reading...")
+	_, err = a.conn.Read(tmp)
 	CheckError(err)
-	a.resp = Substr(string(result), 10, 1)
+	fmt.Println("Readed: " + string(tmp))
+	a.resp = Substr(string(tmp), 10, 1)
 	if a.resp == "T" {
 		return true
 	} else {
 		return false
 	}
 }
-func (a Tfhka) CheckFprinter() bool {
+func (a Tfhka) CheckFprinter(cmd string) bool {
+	fmt.Println("Send Check ...")
 	var in = "CheckFprinter():1\000"
 	_, err := a.conn.Write([]byte(in))
 	CheckError(err)
-	result, err := ioutil.ReadAll(a.conn)
+	tmp := make([]byte, 256)
+	fmt.Println("Write Complete. Reading...")
+	_, err = a.conn.Read(tmp)
 	CheckError(err)
-	a.resp = Substr(string(result), 10, 1)
+	fmt.Println("Readed: " + string(tmp))
+	a.resp = Substr(string(tmp), 10, 1)
 	if a.resp == "T" {
 		return true
 	} else {
