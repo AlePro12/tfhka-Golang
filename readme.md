@@ -1,4 +1,4 @@
-#Tfhka_Golang#
+# Tfhka_Golang
 
 ****Integracion de impresora fiscal Tfhka Venezuela mediante el uso de Sockets.****
 
@@ -9,7 +9,7 @@ esta instalada la impresora con DPOS_SOCKET_P.exe corriendo.
 
 *NOTA: Por ahora es una BETA esta en pruebas*
 
-#USO
+# USO
 
 **Ejemplo basico de conexion con el socket**
 ```go
