@@ -1,4 +1,5 @@
 #Tfhka_Golang
+
 ****Integracion de impresora fiscal Tfhka Venezuela mediante el uso de Sockets.****
 
 Ya esta API esta programada en PHP pero aqui esta en Golang.
@@ -9,6 +10,7 @@ esta instalada la impresora con DPOS_SOCKET_P.exe corriendo.
 *NOTA: Por ahora es una BETA esta en pruebas*
 
 #USO
+
 **Ejemplo basico de conexion con el socket**
 ```go
     ip := "192.168.0.2" // Direccion de la PC que tiene la impresora fiscal y que este corriendo DPOS_SOCKET.exe
