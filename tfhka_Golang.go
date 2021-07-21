@@ -25,13 +25,16 @@ type Tfhka struct {
 	arrayRX          string
 	arrayRZ          string
 	LastRes          string
+	Debug            bool
 	conn             *net.TCPConn
 }
 
 //127.0.0.1:PORT Important
 func Tfhka_init(address string, service_port string) (Tfhka, bool) {
-	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", "", nil}
-	fmt.Println("Dial Complete")
+	var a = Tfhka{"", "", "", "", "", service_port, address, 0, "", "", "", "", "", "", "", "", "", false, nil}
+	if a.Debug == true {
+		fmt.Println("Dial Complete")
+	}
 	seconds := 5
 	d := net.Dialer{Timeout: time.Duration(seconds) * time.Second}
 	conn, err := d.Dial("tcp", a.address+":"+a.service_port)
@@ -45,15 +48,21 @@ func Tfhka_init(address string, service_port string) (Tfhka, bool) {
 
 }
 func (a Tfhka) SendCmd(cmd string) bool {
-	//fmt.Println("Send Command: (" + cmd + ") ...")
+	if a.Debug == true {
+		fmt.Println("Send Command: (" + cmd + ") ...")
+	}
 	var in = "SendCmd():" + cmd + "\000"
 	_, err := a.conn.Write([]byte(in))
 	CheckError(err)
 	tmp := make([]byte, 256)
-	//fmt.Println("Write Complete. Reading...")
+	if a.Debug == true {
+		fmt.Println("Write Complete. Reading...")
+	}
 	_, err = a.conn.Read(tmp)
 	CheckError(err)
-	//fmt.Println("Readed: " + string(tmp))
+	if a.Debug == true {
+		fmt.Println("Readed: " + string(tmp))
+	}
 	a.resp = Substr(string(tmp), 10, 1)
 	a.LastRes = a.LastRes
 	if a.resp == "T" {
@@ -63,15 +72,21 @@ func (a Tfhka) SendCmd(cmd string) bool {
 	}
 }
 func (a Tfhka) CheckFprinter() bool {
-	//fmt.Println("Send Check ...")
+	if a.Debug == true {
+		fmt.Println("Send Check ...")
+	}
 	var in = "CheckFprinter():1\000"
 	_, err := a.conn.Write([]byte(in))
 	CheckError(err)
 	tmp := make([]byte, 256)
-	//fmt.Println("Write Complete. Reading...")
+	if a.Debug == true {
+		fmt.Println("Write Complete. Reading...")
+	}
 	_, err = a.conn.Read(tmp)
 	CheckError(err)
-	//fmt.Println("Readed: " + string(tmp))
+	if a.Debug == true {
+		fmt.Println("Readed: " + string(tmp))
+	}
 	a.resp = Substr(string(tmp), 10, 1)
 	if a.resp == "T" {
 		return true
